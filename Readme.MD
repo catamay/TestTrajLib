@@ -41,7 +41,7 @@ This project assumes a robot with a Limelight subsystem and a drivetrain current
 ### Testing the Robot through Visual Studio Code's Simulation
 - On the command palette, select `Simulate Robot Code on Desktop`
 - Wait for a dropdown menu and select `halsim_ds_socket.dll`
-- Open DriverStation on your computer and Enjoy!
+- Open DriverStation on your computer and enjoy!
 
 
 ## Variable Naming Conventions
