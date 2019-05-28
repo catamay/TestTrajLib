@@ -1,11 +1,13 @@
 # Test Trajectory Library Project
-##Preface
+
+## Preface
 This is a project I've been working on the past 2 weeks (started 5/16/19) in order to give the student members of FRC Team 3230 an example of FRC programming in Java.
 At the next meeting, I'll explain the documentation here, as well as basics of each class in the library and the function of each element in the code in a basic way.
 The goal of this project is to begin to get students thinking about Java programming and it's essential to have a sample to look towards.
 
-##Code Synopsis
+## Code Synopsis
 This project assumes a robot with a Limelight subsystem and a drivetrain currently coded for Talon SRX motor controllers (easily switchable to Neos when needed) where it is able to follow a designated path with Jaci's Pathfinder, move towards a vision target using (really quite rudimentary) Limelight vision tracking, and show the vital elements of data logging of subsystems without the use of SmartDashboard (this is an element easily added in the future)
+
 ## Setup Instructions
 
 ### General
