@@ -27,7 +27,7 @@ public class Logger {
 	 */
 	public static void clearLog() {
 		try {
-			java.lang.Runtime.getRuntime().exec("/bin/rm -f ../TestTrajLib/Logs/"+ fileDate.format(dateTime)+ ".txt");
+			java.lang.Runtime.getRuntime().exec("home/lvuser/log.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -39,7 +39,7 @@ public class Logger {
 	 * @param isTitle is a boolean that describes whether or not the object is a section title (such as a subsystem name)
 	 */
 	public static void log(String mark, Boolean isTitle) {
-		try (PrintWriter writer = new PrintWriter(new FileWriter("../TestTrajLib/Logs/"+ fileDate.format(dateTime)+ ".txt", true))) {
+		try (PrintWriter writer = new PrintWriter(new FileWriter("home/lvuser/log.txt", true))) {
 			if(isTitle){
 				writer.print(mark + ":\n");
 			}else{

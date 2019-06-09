@@ -18,6 +18,7 @@ import frc.robot.commands.auto.*;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.TestDrive;
 import lib.logging.LogManager;
+import lib.logging.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -46,6 +47,8 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Vision Test Auto", new VisionTest(0.5, 0.5, 100));
     SmartDashboard.putData("Auto mode", m_chooser);
     m_oi.Init();
+    m_TestDrive.setPosConversionFactor(42);
+    Logger.clearLog();
     
   }
 
