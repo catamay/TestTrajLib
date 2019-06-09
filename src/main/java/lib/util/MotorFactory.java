@@ -64,13 +64,13 @@ public class MotorFactory {
     //Slave Motor Controllers used (You can add whatever else required)
 
     /**
-     * Creates a slaved motor object for a subsystem using a Spark Max motor controller
+     * Creates a slaved brushless motor object for a subsystem using a Spark Max motor controller
      * @param id Motor Controller ID
      * @param masterSpark
      * @return CANSparkMax slave object to be used in your subsystem code
      */
     public static CANSparkMax createSlavedSpark(int id, CANSparkMax masterSpark){
-        CANSparkMax spark = new CANSparkMax(id, MotorType.kBrushed);
+        CANSparkMax spark = new CANSparkMax(id, MotorType.kBrushless);
         spark.follow(masterSpark);
         return spark;
     }

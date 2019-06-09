@@ -15,22 +15,21 @@ import lib.enums.TransmissionSide;
 import lib.logging.Logger;
 
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-//import com.revrobotics.*;         This is commented out because it's unused right now.
+import com.revrobotics.*;         //This is commented out because it's unused right now.
 
 
 /**
  * Test Drivetrain using any number of Rev Neo motors (typically 2 or 3 per drive train)
+ * This Drivetrain assumes Tank Drive and no shifting gearbox is present (however, we can get the latter worked out pretty easily, the former requires ... *Math*)
  */
 public class TestDrive extends LoggableSubsystem{
   private static TestDrive mInstance;
-  private TalonSRX leftMaster, rghtMaster;
-  private TalonSRX leftSlaveA, leftSlaveB, rghtSlaveA, rghtSlaveB; //Visual Studio Code shows these as unused because they are used solely in the private method TestDrive().
+  private CANSparkMax leftMaster, rghtMaster;
+  private CANSparkMax leftSlaveA, leftSlaveB, rghtSlaveA, rghtSlaveB; //Visual Studio Code shows these as unused because they are used solely in the private method TestDrive().
   private DriveSignal lastSignal;
   private PigeonIMU mPidgey;
-  private int leftOffset, rightOffset;
+  private double leftOffset, rightOffset;
 
 
   public synchronized static TestDrive getInstance() {
@@ -40,12 +39,12 @@ public class TestDrive extends LoggableSubsystem{
     return mInstance;
 }
   private TestDrive(){
-    leftMaster = MotorFactory.createSRXMotor(Constants.TestDrive.kLeftMasterID);
-    rghtMaster = MotorFactory.createSRXMotor(Constants.TestDrive.kRghtMasterID);
-    leftSlaveA = MotorFactory.createSRXMotor(Constants.TestDrive.kLeftSlaveAID);
-    leftSlaveB = MotorFactory.createSRXMotor(Constants.TestDrive.kLeftSlaveBID);
-    rghtSlaveA = MotorFactory.createSRXMotor(Constants.TestDrive.kRghtSlaveAID);
-    rghtSlaveB = MotorFactory.createSRXMotor(Constants.TestDrive.kRghtSlaveBID);
+    leftMaster = MotorFactory.createBrushlessNeo(Constants.TestDrive.kLeftMasterID);
+    rghtMaster = MotorFactory.createBrushlessNeo(Constants.TestDrive.kRghtMasterID);
+    leftSlaveA = MotorFactory.createSlavedSpark(Constants.TestDrive.kLeftSlaveAID, leftMaster);
+    leftSlaveB = MotorFactory.createSlavedSpark(Constants.TestDrive.kLeftSlaveBID, leftMaster);
+    rghtSlaveA = MotorFactory.createSlavedSpark(Constants.TestDrive.kRghtSlaveAID, rghtMaster);
+    rghtSlaveB = MotorFactory.createSlavedSpark(Constants.TestDrive.kRghtSlaveBID, rghtMaster);
 
     mPidgey = new PigeonIMU(Constants.TestDrive.kLeftSlaveAID);
      
@@ -70,37 +69,50 @@ public class TestDrive extends LoggableSubsystem{
   }
   
 
-  //These methods are made with the Talon SRX in mind and can easily be adjusted to work with a CANSpark MAX.
+  //These methods are made with the CAN Spark Max in mind and can easily be adjusted to work with a CANSpark MAX.
 
+  public void setPosConversionFactor(double factor){
+      leftMaster.getEncoder().setPositionConversionFactor(factor);
+      rghtMaster.getEncoder().setPositionConversionFactor(factor);
+  }
   /**
-   * Gets the Raw Sensor Position of a TalonSRX Drivetrain
+   * Gets the Raw Sensor Position of a Neo Drivetrain *USE ONLY WHEN YOU ARE USING RAW SENSOR UNITS AS THE POSITION CONVERSION FACTOR*
    * @param side of the drivetrain transmission
    * @return Position (in raw sensor units) relative to the distance traveled by the robot (positive is forward, negative is backward)
    */
-  public int getPositionRaw(TransmissionSide side){
-    switch(side){  
-    case left:
-          return leftMaster.getSelectedSensorPosition() - leftOffset;
-    case right:
-          return rghtMaster.getSelectedSensorPosition() - rightOffset;
-    default:
-          return leftMaster.getSelectedSensorPosition() - leftOffset;
-        }
+    public int getPositionRaw(TransmissionSide side){
+        switch(side){  
+            case left:
+                  return (int)Math.round(leftMaster.getEncoder().getPosition()- leftOffset);
+            case right:
+                  return (int)Math.round(rghtMaster.getEncoder().getPosition()- rightOffset);
+            default:
+                  return (int)Math.round(leftMaster.getEncoder().getPosition()- leftOffset);
+                }
     }
     /**
-     * Gets the Raw Sensor Speed of a TalonSRX Drivetrain
+     * Gets the Motor Speed of a Neo Drivetrain
      * @param side of the drivetrain transmission
-     * @return Velocity (in raw sensor units per 100ms) of the robot
+     * @return Velocity (in motor RPM) of the robot
      */
     public double getSpeedRaw(TransmissionSide side){
         switch(side){  
             case left:
-                  return leftMaster.getSelectedSensorVelocity();
+                  return leftMaster.getEncoder().getVelocity();
             case right:
-                  return rghtMaster.getSelectedSensorVelocity();
+                  return rghtMaster.getEncoder().getVelocity();
             default:
-                  return leftMaster.getSelectedSensorVelocity();
+                  return leftMaster.getEncoder().getVelocity();
                 }
+    }
+
+    /**
+     * 
+     * @param side of the drivetrain transmission
+     * @return Distance travelled by the robot's transmission side in feet 
+     */
+    public double getDistTravelled(TransmissionSide side){
+        return getPositionRaw(side)*Math.PI*Constants.TestDrive.WHEEL_DIAMETER/Constants.TestDrive.ENCODER_TO_WHEEL_RATIO;
     }
 
   /**
@@ -109,8 +121,8 @@ public class TestDrive extends LoggableSubsystem{
    */
   public void setSpeed(DriveSignal signal){
     lastSignal = signal;
-    leftMaster.set(ControlMode.PercentOutput, signal.getLeft());
-    rghtMaster.set(ControlMode.PercentOutput, signal.getRight());
+    leftMaster.set(signal.getLeft());
+    rghtMaster.set(signal.getRight());
   }
 
   /**
@@ -207,9 +219,11 @@ public void zeroSensors() {
   public void logPeriodicIO(){
     Logger.log(this.getClass().getSimpleName(), true);
     Logger.log("Left Sensor Position", getPositionRaw(TransmissionSide.left));
+    Logger.log("Total left side displacement", getDistTravelled(TransmissionSide.left));
     Logger.log("Left Sensor Velocity", getSpeedRaw(TransmissionSide.left));
     Logger.log("Right Sensor Position", getPositionRaw(TransmissionSide.right));
     Logger.log("Right Sensor Velocity", getSpeedRaw(TransmissionSide.right));
+    Logger.log("Total right side displacement", getDistTravelled(TransmissionSide.right));
 
     Logger.log("Last Drivesignal", getLast());
   }

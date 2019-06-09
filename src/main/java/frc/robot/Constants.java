@@ -22,6 +22,10 @@ public class Constants {
 
         public static final double kQuickStopThreshold = 0.0; 
         public static final double kQuickStopAlpha = 0.0;
+
+        //Physical Constants
+        public static final double WHEEL_DIAMETER = 1; //Value in feet
+        public static final double ENCODER_TO_WHEEL_RATIO = 2; //Number of encoder ticks per spin of a wheel
         
 
         //PIDF Constants

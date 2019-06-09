@@ -189,6 +189,7 @@ public class Limelight extends LoggableSubsystem {
     public void logPeriodicIO(){
       Logger.log(this.getClass().getSimpleName(), true);
       Logger.log("Vision Targets Tracked", getTrackedTargets());
+      Logger.log("Limelight Data", getData());
 
     }
     public void initDefaultCommand() {
