@@ -10,28 +10,29 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import lib.logging.Logger;
 import edu.wpi.first.networktables.*;
+import frc.robot.commands.auto.*;
 
 /**
  * Add your docs here.
  */
 public class Limelight extends LoggableSubsystem {
 
-    private static Limelight mInstance;
+
+  private static Limelight mInstance;
     public synchronized static Limelight getInstance() {
       if (mInstance == null) mInstance = new Limelight();
       return mInstance;
     }
-      private double x, y, area;
+
       //x is the tx degree value from Limelight Network Table
       //y is the ty degree value from Limelight Network Table
       //area is the ta value from Limelight Network Table. The ratio of the object area to the entire picture area, as a percent.
+      private double x, y, area;
   
-      //public NetworkTable table;  // NetworkTable is the class used to grab values from the Limelight Network Table
-  
-      NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-      double[] data, angles;
-      double cameraHeight = 0;
-      double cameraAngle = 0;
+      NetworkTable table; //TODO if null, change to the value under limelight()
+      double[] data;
+      double cameraHeight;
+      double cameraAngle;
       double x_resolution = 320;
       double y_resolution = 240;
       double x_fov = 54;
@@ -42,6 +43,10 @@ public class Limelight extends LoggableSubsystem {
     
       double distance, relativeAngle;
     
+      public void setHeightAngle(double height, double angle){
+        cameraHeight = height;
+        cameraAngle = angle;
+      }
       public double[] getData() {
         /** Whether the limelight has any valid targets (0 or 1) */
         NetworkTableEntry tv = table.getEntry("tv");
@@ -77,7 +82,8 @@ public class Limelight extends LoggableSubsystem {
     }
       public Limelight()  //used to initalize the main, important things
       {
-          table = NetworkTableInstance.getDefault().getTable("limelight");    //initializing the network table to grab values from limelight
+          table = NetworkTableInstance.getDefault().getTable("limelight");    //initializing the network table to grab values from limelight\
+          setHeightAngle(6, 0);
           updateLimelight();
       }
   
@@ -189,11 +195,17 @@ public class Limelight extends LoggableSubsystem {
     public void logPeriodicIO(){
       Logger.log(this.getClass().getSimpleName(), true);
       Logger.log("Vision Targets Tracked", getTrackedTargets());
+      Logger.log("Camera Height", cameraHeight);
+      Logger.log("Camera Angle", cameraAngle);
       Logger.log("Limelight Data", getData());
+      if(getTrackedTargets() != 0){
+        Logger.log("Limelight Change in X Angle", getDxAngle());
+        Logger.log("Limelight Change in Y Angle", getDyAngle());
+
+      }
 
     }
     public void initDefaultCommand() {
-      // Set the default command for a subsystem here.
-      //setDefaultCommand(new UseDrive());
+      //setDefaultCommand(new VisionTest(0.1, 0.5, 100));
     }
 }

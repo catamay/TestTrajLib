@@ -64,6 +64,8 @@ private Pathing(){}
     m_left_follower = new EncoderFollower(Left);
     m_right_follower = new EncoderFollower(Right);
 
+    TestDrive.getInstance().setPosConversionFactor(Ticks);
+    
     m_left_follower.configureEncoder(Robot.m_TestDrive.getPositionRaw(TransmissionSide.left), Ticks, wheelDiam);
     // You must tune the PID values on the following line!TODO tune these values when I have a drivetrain
     m_left_follower.configurePIDVA(leftkP, leftkI, leftkD, 1 / maxVel, 0);
