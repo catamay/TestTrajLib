@@ -12,6 +12,7 @@ package lib.geometry;
  */
 public class Position2d extends Point {
     private double angle;
+    private double lastAngle;
 
     public Position2d(double angle){
         this.angle = angle;
@@ -29,6 +30,14 @@ public class Position2d extends Point {
 
     public double getAngle(){
         return this.angle;
+    }
+    public double rotate1(double distance, double initialAngle){
+        Point rotate1 = this.translate(distance, initialAngle);
+        return Math.atan2(rotate1.getY(), rotate1.getX()) - initialAngle;
+    }
+    public double rotate2(double angle, double distance){
+        lastAngle = angle;
+        return angle - lastAngle - rotate1(distance, angle);
     }
 
     @Override

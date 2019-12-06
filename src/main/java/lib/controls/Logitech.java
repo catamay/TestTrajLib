@@ -24,10 +24,10 @@ public class Logitech {
     public static final int BTN_11 = 11;
     public static final int BTN_12 = 12;
     
-    public static final int AXIS_X = 1;
-    public static final int AXIS_Y = 2;
-    public static final int AXIS_TWIST = 3;
-    public static final int AXIS_THROTTLE = 4;
+    public static final int AXIS_X = 0;
+    public static final int AXIS_Y = 1;
+    public static final int AXIS_TWIST = 2;
+    public static final int AXIS_THROTTLE = 3;
     public static final int AXIS_HATX = 5; //TODO Check if Axes 5 and 6 are correct and not switched
     public static final int AXIS_HATY = 6;
 }

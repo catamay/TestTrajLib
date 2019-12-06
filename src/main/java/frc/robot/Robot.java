@@ -44,10 +44,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Command Based Path Testing", new PathTest());
-    m_chooser.addOption("Vision Test Auto", new VisionTest(0.5, 0.5, 100));
+    m_chooser.addOption("Vision Test Auto", new VisionTest(0.3, 1, 100));
     SmartDashboard.putData("Auto mode", m_chooser);
     m_oi.Init();
     m_TestDrive.setPosConversionFactor(42);
+    m_TestDrive.zeroSensors();
     Logger.clearLog();
     
   }

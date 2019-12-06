@@ -63,7 +63,6 @@ private Pathing(){}
     
     m_left_follower = new EncoderFollower(Left);
     m_right_follower = new EncoderFollower(Right);
-
     TestDrive.getInstance().setPosConversionFactor(Ticks);
     
     m_left_follower.configureEncoder(Robot.m_TestDrive.getPositionRaw(TransmissionSide.left), Ticks, wheelDiam);
@@ -80,6 +79,9 @@ private Pathing(){}
 
   public void execute(Trajectory Left){
     m_follower_notifier.startPeriodic(Left.get(0).dt);
+  }
+  public boolean isFinished(){
+    return m_left_follower.isFinished();
   }
   public void end(){
     m_follower_notifier.stop();

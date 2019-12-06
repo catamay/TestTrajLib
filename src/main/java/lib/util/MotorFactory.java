@@ -26,7 +26,7 @@ public class MotorFactory {
      * @param id Motor Controller ID
      * @return CANSparkMax object to be used in your subsystem code
      */
-    public static CANSparkMax createBrushlessNeo(int id){
+    public static CANSparkMax createBrushlessNeo(int id, int currentLimit){
         CANSparkMax spark = new CANSparkMax(id, MotorType.kBrushless);
         spark.setSmartCurrentLimit(60); //This can be set to whatever, but it's just the peak current limit value 
         return spark;
@@ -36,9 +36,9 @@ public class MotorFactory {
      * @param id Motor Controller ID
      * @return CANSparkMax object to be used in your subsystem code
      */
-    public static CANSparkMax createBrushedMotor(int id){
+    public static CANSparkMax createBrushedMotor(int id, int currentLimit){
         CANSparkMax spark = new CANSparkMax(id, MotorType.kBrushed);
-        spark.setSmartCurrentLimit(60);
+        spark.setSmartCurrentLimit(currentLimit);
         return spark;
     }
     /**
@@ -69,8 +69,8 @@ public class MotorFactory {
      * @param masterSpark
      * @return CANSparkMax slave object to be used in your subsystem code
      */
-    public static CANSparkMax createSlavedSpark(int id, CANSparkMax masterSpark){
-        CANSparkMax spark = new CANSparkMax(id, MotorType.kBrushless);
+    public static CANSparkMax createSlavedSpark(int id, CANSparkMax masterSpark, MotorType brush){
+        CANSparkMax spark = new CANSparkMax(id, brush);
         spark.follow(masterSpark);
         return spark;
     }

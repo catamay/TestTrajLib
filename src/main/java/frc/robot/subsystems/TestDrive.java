@@ -17,6 +17,7 @@ import lib.logging.Logger;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.*;         //This is commented out because it's unused right now.
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 /**
@@ -37,20 +38,21 @@ public class TestDrive extends LoggableSubsystem{
         mInstance = new TestDrive();
     }
     return mInstance;
-}
+  }
+
   private TestDrive(){
-    leftMaster = MotorFactory.createBrushlessNeo(Constants.TestDrive.kLeftMasterID);
-    rghtMaster = MotorFactory.createBrushlessNeo(Constants.TestDrive.kRghtMasterID);
-    leftSlaveA = MotorFactory.createSlavedSpark(Constants.TestDrive.kLeftSlaveAID, leftMaster);
-    leftSlaveB = MotorFactory.createSlavedSpark(Constants.TestDrive.kLeftSlaveBID, leftMaster);
-    rghtSlaveA = MotorFactory.createSlavedSpark(Constants.TestDrive.kRghtSlaveAID, rghtMaster);
-    rghtSlaveB = MotorFactory.createSlavedSpark(Constants.TestDrive.kRghtSlaveBID, rghtMaster);
+    leftMaster = MotorFactory.createBrushlessNeo(Constants.TestDrive.kLeftMasterID, 60);
+    rghtMaster = MotorFactory.createBrushlessNeo(Constants.TestDrive.kRghtMasterID, 60);
+    leftSlaveA = MotorFactory.createSlavedSpark(Constants.TestDrive.kLeftSlaveAID, leftMaster, MotorType.kBrushless);
+    //leftSlaveB = MotorFactory.createSlavedSpark(Constants.TestDrive.kLeftSlaveBID, leftMaster);
+    rghtSlaveA = MotorFactory.createSlavedSpark(Constants.TestDrive.kRghtSlaveAID, rghtMaster, MotorType.kBrushless);
+    //rghtSlaveB = MotorFactory.createSlavedSpark(Constants.TestDrive.kRghtSlaveBID, rghtMaster);
 
     mPidgey = new PigeonIMU(Constants.TestDrive.kLeftSlaveAID);
      
     leftMaster.setInverted(true);
     leftSlaveA.setInverted(true);
-    leftSlaveB.setInverted(true);
+    //leftSlaveB.setInverted(true);
      
   }
 
@@ -225,7 +227,7 @@ public void zeroSensors() {
     Logger.log("Right Sensor Velocity", getSpeedRaw(TransmissionSide.right));
     Logger.log("Total right side displacement", getDistTravelled(TransmissionSide.right));
 
-    Logger.log("Last Drivesignal", getLast());
+    Logger.log("Last DriveSignal", getLast().toString());
   }
 
 }

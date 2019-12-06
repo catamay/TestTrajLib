@@ -66,9 +66,10 @@ public class VisionTest extends Command {
   @Override
   protected void initialize() {
     setTimeout(timeout);
-
+    m_Limelight = Limelight.getInstance();
     angleDeltaX = m_Limelight.getDx();
-    targetPercentOfFrame = m_Limelight.getTargetArea();
+    m_Limelight.setHeightAngle(3.5, 25);
+    //targetPercentOfFrame = m_Limelight.getTargetArea();
 
 
   }
@@ -80,30 +81,35 @@ public class VisionTest extends Command {
       noCurrentTarget = false;
       hadTarget = true;
 
-      double[] data = m_Limelight.getData();
-      double limelightData = data[1];
-      double sizeData = data[3];
+      double limelightData = m_Limelight.getX();
+      double sizeData = m_Limelight.getArea();
 
       lastKnownYaw = limelightData;
-      turnSpeed = Util.limit( limelightData * (1/10), -0.5, 0.5);
+      turnSpeed = Util.limit( limelightData * (1.0/27), -targetSpeed, targetSpeed);
 
-      System.out.println("Turn speed: " + turnSpeed);
+      Logger.log("Turn speed:", turnSpeed);
 
       forwardSpeed = 0;
 
       double distanceRatio = targetSizeSetpoint - sizeData;
-
+      
       double forwardSpeed = distanceRatio * 0.2;
 
       if (sizeData > targetSizeSetpoint) { 
-        tooClose = true; System.out.println("Too close"); 
+        tooClose = true; 
+        Logger.log("The Robot is", "Too close"); 
       }
 
-      if ( forwardSpeed > 0.5 ) { forwardSpeed = 0.5;}
-      if ( forwardSpeed < -0.5 ) { forwardSpeed = -0.5;}
+      
+      if(distanceRatio != distanceRatio + 0.001){
+        forwardSpeed = 10 * (distanceRatio) / 100;
+        if ( forwardSpeed > 0.5 ) { forwardSpeed = 0.5;}
+        if ( forwardSpeed < -0.5 ) { forwardSpeed = -0.5;}
+        SmartDashboard.putNumber("forward speed", forwardSpeed);
+        SmartDashboard.putNumber("Turn speed", turnSpeed);
+      }
 
-      SmartDashboard.putNumber("forward speed", forwardSpeed);
-      SmartDashboard.putNumber("Turn speed", turnSpeed);
+
       
       
      

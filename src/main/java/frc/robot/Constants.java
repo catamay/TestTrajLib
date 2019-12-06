@@ -13,12 +13,10 @@ package frc.robot;
 public class Constants {
     public class TestDrive {
         //Motor Controllers
-        public static final int kLeftMasterID = 0;
-        public static final int kRghtMasterID = 1;
-        public static final int kLeftSlaveAID = 2;
-        public static final int kLeftSlaveBID = 3;
-        public static final int kRghtSlaveAID = 4;
-        public static final int kRghtSlaveBID = 5;
+        public static final int kLeftMasterID = 21;
+        public static final int kRghtMasterID = 22;
+        public static final int kLeftSlaveAID = 23;
+        public static final int kRghtSlaveAID = 25;
 
         public static final double kQuickStopThreshold = 0.0; 
         public static final double kQuickStopAlpha = 0.0;

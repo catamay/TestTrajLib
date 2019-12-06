@@ -7,7 +7,7 @@
 
 package lib.logging;
 
-
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,7 +19,6 @@ import java.util.Date;
  * This logger class creates files inside of a required Logs (case sensitive) folder outside of this source folder (It is under .gitignore for organizational purposes)
  */
 public class Logger {
-	private static DateFormat fileDate = new SimpleDateFormat("yyyyMMdd HHmmss");
 	private static DateFormat prntDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	static Date dateTime = new Date();
 	/**
@@ -28,6 +27,8 @@ public class Logger {
 	public static void clearLog() {
 		try {
 			java.lang.Runtime.getRuntime().exec("home/lvuser/log.txt");
+			File log = new File("home/lvuser/log.txt");
+			log.delete();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

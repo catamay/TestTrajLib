@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import frc.robot.subsystems.Limelight;
 import lib.controls.*;
 import lib.enums.GameState;
 
@@ -21,6 +22,8 @@ public class Controls{
   private TimedRumble driverRumble, operatorRumble;
   
   private static Controls mInstance;
+
+ 
 
   public synchronized static Controls getInstance() {
     if (mInstance == null) {
@@ -73,13 +76,16 @@ public class Controls{
   }
   
   public double getThrottle() {
-    return -Driver.getRawAxis(Xbox360.AXIS_LEFT_Y);
+    return -Driver.getRawAxis(Logitech.AXIS_Y);
 }    
 
 public double getCurvature() {
-    return Driver.getRawAxis(Xbox360.AXIS_RIGHT_X) * 0.82;
+    return Driver.getRawAxis(Logitech.AXIS_TWIST) * 0.82;
 }
   
+
+//commands
+
   
   //// CREATING BUTTONS
   // One type of button is a joystick button which is any button on a

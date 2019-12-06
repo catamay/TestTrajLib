@@ -26,8 +26,8 @@ import edu.wpi.first.wpilibj.command.Command;
 public class PathTest extends Command {
   
   private static final int k_ticks_per_rev = 42; //TODO change this to match the actual encoders used
-  private static final double k_wheel_diameter = 4.0 / 12.0; //Described in feet
-  private static final double k_max_velocity = 10; //Described in feet/sec
+  private static final double k_wheel_diameter = 6.0 / 12.0; //Described in feet
+  private static final double k_max_velocity = 3; //Described in feet/sec
   private static final String k_path_name = "Unnamed"; //path name as described in Path Weaver
   private Trajectory left_trajectory;{
     try{
@@ -69,7 +69,7 @@ public class PathTest extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return Pathing.getInstance().isFinished();
   }
 
   // Called once after isFinished returns true
